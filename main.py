@@ -1,49 +1,88 @@
+from datetime import time
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
 import data
 import helpers
+from pages import UrbanRoutesPage
+
 
 class TestUrbanRoutes:
   @classmethod
   def setup_class(cls):
-      def setup_class(cls):
-          url= "https://cnt-7df7f68b-d09c-4637-9104-1c137eaf9e0e.containerhub.tripleten-services.com"
-          if not helpers.is_url_reachable(url):
-              raise Exception("Service unavailable. Please check the URL")
+      # do not modify - we need additional logging enabled in order to retrieve phone confirmation code
+      from selenium.webdriver import DesiredCapabilities
+      capabilities = DesiredCapabilities.CHROME
+      capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
+      cls.driver = webdriver.Chrome()
+      cls.driver.implicitly_wait(5)
+if helpers.is_url_reachable(data.URBAN_ROUTES_URL):
+    print("Connected to URBAN ROUTES server")
+else:
+ print("Cannot connect to URBAN ROUTES server. Check the server is on and still running.")
+
+
 
  def test_set_route(self):
-     # Add in S8
-     print( "function created for set route")
-     pass
+     self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+     routes_page = UrbanRoutesPage(self.driver)
+     routes_page.set_route('East 2nd Street, 601', '1300 1st St')
+     assert routes_page.get_from('East 2nd Street, 601') == data.ADDRESS_FROM
+     assert routes_page.get_to('1300 1st St') == data.ADDRESS_TO
+
 def test_select_plan(self):
-    # Add in S8
-    print("function created for select plan")
-    pass
+        self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.set_route('East 2nd Street, 601','1300 1st St')
+        assert routes_page.get_from('East 2nd Street, 601') == data.ADDRESS_FROM
+        assert routes_page.get_to('1300 1st St') == data.ADDRESS_TO
+
+
 def test_fill_phone_number(self):
-    # Add in S8
-    print("function created for fill phone number")
-    pass
+    self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+    routes_page = UrbanRoutesPage(self.driver)
+    routes_page.set_route('East 2nd Street, 601','1300 1st St' )
+    routes_page_select_test_fill_phone_number = UrbanRoutesPage(self.driver)
+    assert routes_page.get_test_fill_phone_number == '+1 123 123 12 12'
+
 def test_fill_card(self):
-    # Add in S8
-    print("function created for fill card")
-    pass
+    self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+    routes_page = UrbanRoutesPage(self.driver)
+    routes_page.set_route('East 2nd Street','1300 1st St' )
+    routes_page_select_test_fill_card = UrbanRoutesPage(self.driver)
+    assert routes_page.get_test_fill_card == '1234 5678 9100', '111'
+
 def test_comment_for_driver(self):
-    # Add in S8
-    print("function created for comment for driver")
-    pass
+    self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+    routes_page = UrbanRoutesPage(self.driver)
+    routes_page.set_route('East 2nd Street','1300 1st St' )
+    routes_page_select_test_comment_for_driver = UrbanRoutesPage(self.driver)
+    assert routes_page.get_test_comment_for_driver  ('Stop at the juice bar, please')
+
 def test_order_blanket_and_handkerchiefs(self):
-    # Add in S8
-    print("function created for order blanket and handkerchiefs")
-    pass
+    self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+    routes_page = UrbanRoutesPage(self.driver)
+    routes_page.set_route('East 2nd Street','1300 1st St')
+    routes_page_select_test_order_blanket_and_handkerchiefs = UrbanRoutesPage(self.driver)
+    assert routes_page.get_test_order_blanket_and_handkerchiefs
+
 def test_order_2_ice_creams(self):
-    # Add in S8
-    print("function created for order 2 ice creams")
-    pass
+    self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+    routes_page = UrbanRoutesPage(self.driver)
+    routes_page.set_route('East 2nd Street','1300 1st St' )
+    routes_page_select_test_order_2_ice_creams = UrbanRoutesPage(self.driver)
+    assert routes_page.get_test_order_2_ice_creams
+
 def test_car_search_model_appears(self):
-    # Add in S8
-    print("function created for car search model")
-    pass
-def test_order_2_ice_creams(self):
-   number_of_ice_creams = 2
-for ice_cream in range(2)
-    #Add in S8
-    print("function created for test_order_2_ice_creams")
-    pass
+    self.driver.get('https://cnt-c0d9a00c-9d24-4c13-bfb8-c31d2d0a6faa.containerhub.tripleten-services.com/')
+    routes_page = UrbanRoutesPage(self.driver)
+    routes_page.set_route('East 2nd Street', '1300 1st St')
+    routes_page_select_test_model_appears = UrbanRoutesPage(self.driver)
+    assert routes_page.get_test_car_search_model_appears
+
+
+@classmethod
+
+def teardown_class(cls):
+        cls.driver.quit()
